@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function POST() {
   try {
-    cookies().set('token', '', {
+    const response = NextResponse.json({ message: 'Logout successful' });
+
+    response.cookies.set('token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -11,7 +12,7 @@ export async function POST() {
       path: '/',
     });
 
-    return NextResponse.json({ message: 'Logout successful' });
+    return response;
   } catch (error) {
     console.error(error);
     return NextResponse.json(

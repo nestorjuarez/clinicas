@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '../../../generated-prisma-client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient();
 
@@ -36,7 +35,9 @@ export async function POST(request: Request) {
       { expiresIn: '1h' }
     );
 
-    cookies().set('token', token, {
+    const response = NextResponse.json({ message: 'Login successful' });
+
+    response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
       path: '/',
     });
 
-    return NextResponse.json({ message: 'Login successful' });
+    return response;
   } catch (error) {
     console.error(error);
     return NextResponse.json(
