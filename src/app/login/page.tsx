@@ -31,8 +31,12 @@ export default function LoginPage() {
 
       // Login exitoso, redirigir al dashboard
       router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Ocurrió un error inesperado');
+      }
     } finally {
       setLoading(false);
     }
