@@ -97,7 +97,8 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt',
   email: 'email',
   name: 'name',
-  password: 'password'
+  password: 'password',
+  role: 'role'
 };
 
 exports.Prisma.PatientScalarFieldEnum = {
@@ -126,7 +127,10 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.Role = exports.$Enums.Role = {
+  ADMIN: 'ADMIN',
+  PROFESIONAL: 'PROFESIONAL'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -179,13 +183,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// Define database connection via the `DATABASE_URL` env var\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Define custom output path for generated Prisma Client\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/app/generated-prisma-client\"\n}\n\n// Example data model\nmodel User {\n  id        Int       @id @default(autoincrement())\n  createdAt DateTime  @default(now())\n  email     String    @unique\n  name      String?\n  password  String\n  patients  Patient[]\n}\n\nmodel Patient {\n  id          Int       @id @default(autoincrement())\n  name        String\n  email       String    @unique\n  phone       String?\n  dateOfBirth DateTime? @map(\"date_of_birth\")\n  address     String?\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n\n  professional   User @relation(fields: [professionalId], references: [id])\n  professionalId Int\n}\n",
-  "inlineSchemaHash": "9993ec2ddce6e0a0d6dad7ef832b8074ed25e4f7e4b933f8551e6e6a0c209abb",
+  "inlineSchema": "// Define database connection via the `DATABASE_URL` env var\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Define custom output path for generated Prisma Client\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/app/generated-prisma-client\"\n}\n\n// Example data model\nmodel User {\n  id        Int       @id @default(autoincrement())\n  createdAt DateTime  @default(now())\n  email     String    @unique\n  name      String?\n  password  String\n  role      Role      @default(PROFESIONAL)\n  patients  Patient[]\n}\n\nmodel Patient {\n  id          Int       @id @default(autoincrement())\n  name        String\n  email       String    @unique\n  phone       String?\n  dateOfBirth DateTime? @map(\"date_of_birth\")\n  address     String?\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n\n  professional   User @relation(fields: [professionalId], references: [id])\n  professionalId Int\n}\n\nenum Role {\n  ADMIN\n  PROFESIONAL\n}\n",
+  "inlineSchemaHash": "bcefb2c8b308aac85545a31083af91514ffaf24a67d5f7f130411025113f7d3b",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"patients\",\"kind\":\"object\",\"type\":\"Patient\",\"relationName\":\"PatientToUser\"}],\"dbName\":null},\"Patient\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dateOfBirth\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"date_of_birth\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"professional\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PatientToUser\"},{\"name\":\"professionalId\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"patients\",\"kind\":\"object\",\"type\":\"Patient\",\"relationName\":\"PatientToUser\"}],\"dbName\":null},\"Patient\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dateOfBirth\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"date_of_birth\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"professional\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PatientToUser\"},{\"name\":\"professionalId\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

@@ -17,6 +17,7 @@ model User {
   email     String    @unique
   name      String?
   password  String
+  role      Role      @default(PROFESIONAL)
   patients  Patient[]
 }
 
@@ -32,4 +33,9 @@ model Patient {
 
   professional   User @relation(fields: [professionalId], references: [id])
   professionalId Int
+}
+
+enum Role {
+  ADMIN
+  PROFESIONAL
 }
