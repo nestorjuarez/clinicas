@@ -106,7 +106,17 @@ export async function PUT(request: Request) {
     }
 
     // Preparar los datos de actualización
-    const updateData: any = {
+    const updateData: {
+      name: string;
+      email: string;
+      officeAddress: string;
+      city: string;
+      specialties: {
+        set: never[];
+        connect: { id: number }[];
+      };
+      password?: string;
+    } = {
       name,
       email,
       officeAddress,
