@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import { PrismaClient } from '../generated-prisma-client';
 import { redirect } from 'next/navigation';
 import LogoutButton from './LogoutButton';
+import ProfessionalsManagement from './admin/ProfessionalsManagement';
+import SpecialtiesManagement from './admin/SpecialtiesManagement';
+import PatientsManagement from './PatientsManagement';
 
 const prisma = new PrismaClient();
 
@@ -29,7 +32,9 @@ async function getUser() {
     
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { name: true, email: true },
+      include: {
+        patients: true,
+      },
     });
 
     return user;
@@ -39,25 +44,66 @@ async function getUser() {
   }
 }
 
+async function getSpecialties() {
+  return await prisma.specialty.findMany();
+}
+
+async function getProfessionals() {
+  return await prisma.user.findMany({
+    where: {
+      role: 'PROFESIONAL',
+    },
+    include: {
+      specialties: true,
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+}
+
 export default async function DashboardPage() {
   const user = await getUser();
 
   if (!user) {
     redirect('/login');
   }
+  
+  const specialties = user.role === 'ADMIN' ? await getSpecialties() : [];
+  const professionals = user.role === 'ADMIN' ? await getProfessionals() : [];
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-2xl p-8 text-center bg-white rounded-lg shadow-md">
-        <h1 className="text-4xl font-bold text-gray-900">
-          ¡Bienvenido al Dashboard, {user.name}!
-        </h1>
-        <p className="mt-4 text-lg text-gray-600">
-          Has iniciado sesión como {user.email}.
-        </p>
-        <div className="mt-8">
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-4xl p-8 mx-auto">
+        <div className="flex items-center justify-between pb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900">
+              ¡Bienvenido, {user.name}!
+            </h1>
+            <p className="mt-2 text-lg text-gray-600">
+              Has iniciado sesión como {user.email} (Rol: {user.role}).
+            </p>
+          </div>
           <LogoutButton />
         </div>
+
+        {user.role === 'PROFESIONAL' && (
+          <PatientsManagement initialPatients={user.patients} professionalId={user.id} />
+        )}
+
+        {user.role === 'ADMIN' && (
+          <div className="space-y-8">
+            <div className="p-8 bg-white border-gray-200 rounded-lg shadow-md">
+              <h2 className="pb-6 text-2xl font-semibold text-gray-800 border-b border-gray-200">Panel de Administración</h2>
+              <div className="mt-6">
+                <ProfessionalsManagement professionals={professionals} specialties={specialties} />
+              </div>
+            </div>
+            <div className="p-8 bg-white border-gray-200 rounded-lg shadow-md">
+                <SpecialtiesManagement initialSpecialties={specialties} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -18,12 +18,20 @@ model User {
   name      String?
   password  String
   role      Role     @default(PROFESIONAL)
-  patients  Patient[]
+  
+  // Location fields for professionals
+  officeAddress String?
+  city          String?
+
+  patients     Patient[]
+  visits       Visit[]
+  specialties  Specialty[] @relation("ProfessionalSpecialties")
 }
 
 model Patient {
   id             Int       @id @default(autoincrement())
   name           String
+  dni            String    @unique
   email          String    @unique
   phone          String?
   dateOfBirth    DateTime? @map("date_of_birth")
@@ -31,11 +39,51 @@ model Patient {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  professional   User      @relation(fields: [professionalId], references: [id])
-  professionalId Int
+  professional    User             @relation(fields: [professionalId], references: [id])
+  professionalId  Int
+  clinicalHistory ClinicalHistory?
 }
 
 enum Role {
   ADMIN
   PROFESIONAL
+}
+
+model Specialty {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  professionals User[]   @relation("ProfessionalSpecialties")
+}
+
+model ClinicalHistory {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  patientId  Int      @unique
+  visits     Visit[]
+}
+
+model Visit {
+  id                Int            @id @default(autoincrement())
+  visitDate         DateTime       @default(now())
+  reason            String
+  epicrisis         String         @db.Text
+  diagnosis         String
+  treatment         String
+  clinicalHistory   ClinicalHistory @relation(fields: [clinicalHistoryId], references: [id])
+  clinicalHistoryId Int
+  professional      User           @relation(fields: [professionalId], references: [id])
+  professionalId    Int
+  studies           MedicalStudy[]
+}
+
+model MedicalStudy {
+  id         Int      @id @default(autoincrement())
+  fileName   String
+  fileUrl    String
+  fileType   String
+  uploadedAt DateTime @default(now())
+  visit      Visit    @relation(fields: [visitId], references: [id])
+  visitId    Int
 }

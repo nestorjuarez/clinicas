@@ -126,12 +126,15 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   password: 'password',
-  role: 'role'
+  role: 'role',
+  officeAddress: 'officeAddress',
+  city: 'city'
 };
 
 exports.Prisma.PatientScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  dni: 'dni',
   email: 'email',
   phone: 'phone',
   dateOfBirth: 'dateOfBirth',
@@ -139,6 +142,38 @@ exports.Prisma.PatientScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   professionalId: 'professionalId'
+};
+
+exports.Prisma.SpecialtyScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.ClinicalHistoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  patientId: 'patientId'
+};
+
+exports.Prisma.VisitScalarFieldEnum = {
+  id: 'id',
+  visitDate: 'visitDate',
+  reason: 'reason',
+  epicrisis: 'epicrisis',
+  diagnosis: 'diagnosis',
+  treatment: 'treatment',
+  clinicalHistoryId: 'clinicalHistoryId',
+  professionalId: 'professionalId'
+};
+
+exports.Prisma.MedicalStudyScalarFieldEnum = {
+  id: 'id',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType',
+  uploadedAt: 'uploadedAt',
+  visitId: 'visitId'
 };
 
 exports.Prisma.SortOrder = {
@@ -162,7 +197,11 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Patient: 'Patient'
+  Patient: 'Patient',
+  Specialty: 'Specialty',
+  ClinicalHistory: 'ClinicalHistory',
+  Visit: 'Visit',
+  MedicalStudy: 'MedicalStudy'
 };
 
 /**
