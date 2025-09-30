@@ -8,6 +8,9 @@ type Patient = {
   id: number;
   name: string;
   email: string;
+  dni: string;
+  phone: string | null;
+  dateOfBirth: Date | null;
 };
 
 interface PatientsManagementProps {
@@ -21,6 +24,21 @@ export default function PatientsManagement({ initialPatients, professionalId }: 
   const handleSuccess = () => {
     setIsModalOpen(false);
     // El router.refresh() en el formulario se encargará de actualizar la lista
+  };
+
+  const calculateAge = (dateOfBirth: Date | null): string => {
+    if (!dateOfBirth) return 'No especificada';
+    
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return `${age} años`;
   };
 
   return (
@@ -42,8 +60,19 @@ export default function PatientsManagement({ initialPatients, professionalId }: 
               {initialPatients.map((patient) => (
                 <li key={patient.id}>
                   <Link href={`/dashboard/patients/${patient.id}`} className="block px-4 py-4 hover:bg-gray-50">
-                    <p className="font-bold text-indigo-600">{patient.name}</p>
-                    <p className="text-sm text-gray-600">{patient.email}</p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-bold text-indigo-600">{patient.name}</p>
+                        <p className="text-sm text-gray-600">{patient.email}</p>
+                        {patient.phone && (
+                          <p className="text-sm text-gray-500">Tel: {patient.phone}</p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-gray-900">DNI: {patient.dni}</p>
+                        <p className="text-sm text-gray-600">{calculateAge(patient.dateOfBirth)}</p>
+                      </div>
+                    </div>
                   </Link>
                 </li>
               ))}

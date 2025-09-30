@@ -1,13 +1,12 @@
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '../generated-prisma-client';
+import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import LogoutButton from './LogoutButton';
 import ProfessionalsManagement from './admin/ProfessionalsManagement';
 import SpecialtiesManagement from './admin/SpecialtiesManagement';
 import PatientsManagement from './PatientsManagement';
 
-const prisma = new PrismaClient();
 
 interface UserPayload {
   userId: number;
@@ -33,7 +32,16 @@ async function getUser() {
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       include: {
-        patients: true,
+        patients: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            dni: true,
+            phone: true,
+            dateOfBirth: true,
+          },
+        },
       },
     });
 

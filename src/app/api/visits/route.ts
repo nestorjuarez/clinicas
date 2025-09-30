@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@/app/generated-prisma-client';
+import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
-
-const prisma = new PrismaClient();
 
 interface UserPayload {
   userId: number;
@@ -65,6 +63,55 @@ export async function POST(request: Request) {
     return NextResponse.json(newVisit, { status: 201 });
   } catch (error) {
     console.error('Error al crear la visita:', error);
+    return NextResponse.json({ message: 'Error interno del servidor' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const { 
+      visitId,
+      reason, 
+      epicrisis, 
+      diagnosis, 
+      treatment, 
+      professionalId 
+    } = await request.json();
+    
+    const professional = await getProfessionalUser(professionalId);
+    if (!professional) {
+      return NextResponse.json({ message: 'No autorizado' }, { status: 403 });
+    }
+    
+    if (!visitId || !reason || !epicrisis || !diagnosis || !treatment) {
+      return NextResponse.json({ message: 'Todos los campos son obligatorios' }, { status: 400 });
+    }
+
+    // Verificar que la visita pertenece al profesional
+    const existingVisit = await prisma.visit.findFirst({
+      where: {
+        id: visitId,
+        professionalId: professional.id,
+      },
+    });
+
+    if (!existingVisit) {
+      return NextResponse.json({ message: 'Visita no encontrada o no tienes permiso para editarla' }, { status: 404 });
+    }
+
+    const updatedVisit = await prisma.visit.update({
+      where: { id: visitId },
+      data: {
+        reason,
+        epicrisis,
+        diagnosis,
+        treatment,
+      },
+    });
+
+    return NextResponse.json(updatedVisit, { status: 200 });
+  } catch (error) {
+    console.error('Error al actualizar la visita:', error);
     return NextResponse.json({ message: 'Error interno del servidor' }, { status: 500 });
   }
 }

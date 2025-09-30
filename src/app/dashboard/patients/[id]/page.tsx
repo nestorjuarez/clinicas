@@ -1,11 +1,9 @@
-import { PrismaClient } from '@/app/generated-prisma-client';
+import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import PatientDetailsClient from './PatientDetailsClient';
 import Link from 'next/link';
-
-const prisma = new PrismaClient();
 
 interface UserPayload {
   userId: number;
@@ -38,7 +36,13 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
       id: patientId,
       professionalId: professionalId,
     },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      dni: true,
+      phone: true,
+      dateOfBirth: true,
       clinicalHistory: {
         include: {
           visits: {
@@ -70,8 +74,16 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
 
         <div className="p-6 bg-white rounded-lg shadow-md">
           <h1 className="text-3xl font-bold text-gray-800">{patient.name}</h1>
-          <p className="mt-2 text-gray-600">{patient.email}</p>
-          {patient.phone && <p className="text-gray-600">Teléfono: {patient.phone}</p>}
+          <div className="mt-2 space-y-1">
+            <p className="text-gray-600">{patient.email}</p>
+            <p className="text-gray-600">DNI: {patient.dni}</p>
+            {patient.phone && <p className="text-gray-600">Teléfono: {patient.phone}</p>}
+            {patient.dateOfBirth && (
+              <p className="text-gray-600">
+                Fecha de Nacimiento: {new Date(patient.dateOfBirth).toLocaleDateString('es-ES')}
+              </p>
+            )}
+          </div>
         </div>
         
         <PatientDetailsClient patient={patient} professionalId={professionalId} />

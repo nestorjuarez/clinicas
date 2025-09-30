@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import AddVisitForm from './AddVisitForm';
+import EditVisitForm from './EditVisitForm';
 
 // Definimos los tipos para que el código sea más seguro y claro
 type Visit = {
@@ -34,10 +35,17 @@ interface PatientDetailsClientProps {
 export default function PatientDetailsClient({ patient, professionalId }: PatientDetailsClientProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewingVisit, setViewingVisit] = useState<Visit | null>(null); // State for the details modal
+  const [editingVisit, setEditingVisit] = useState<Visit | null>(null); // State for editing modal
   const clinicalHistoryId = patient.clinicalHistory?.id;
 
   const handleSuccess = () => {
     setIsModalOpen(false);
+  };
+
+  const handleEditSuccess = () => {
+    setEditingVisit(null);
+    // Recargar la página para mostrar los cambios
+    window.location.reload();
   };
 
   return (
@@ -58,16 +66,24 @@ export default function PatientDetailsClient({ patient, professionalId }: Patien
               <div key={visit.id} className="p-4 bg-white rounded-lg shadow">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-semibold">Fecha: {new Date(visit.visitDate).toLocaleDateString()}</p>
+                    <p className="font-semibold">Fecha: {new Date(visit.visitDate).toLocaleDateString('es-ES')}</p>
                     <p><span className="font-semibold">Motivo:</span> {visit.reason}</p>
                     <p><span className="font-semibold">Diagnóstico:</span> {visit.diagnosis}</p>
                   </div>
-                  <button 
-                    onClick={() => setViewingVisit(visit)}
-                    className="px-3 py-1 text-sm font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700"
-                  >
-                    Ver Detalles
-                  </button>
+                  <div className="flex space-x-2">
+                    <button 
+                      onClick={() => setViewingVisit(visit)}
+                      className="px-3 py-1 text-sm font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700"
+                    >
+                      Ver Detalles
+                    </button>
+                    <button 
+                      onClick={() => setEditingVisit(visit)}
+                      className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+                    >
+                      Editar
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
@@ -98,6 +114,27 @@ export default function PatientDetailsClient({ patient, professionalId }: Patien
             >
               Cerrar
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Visit Modal */}
+      {editingVisit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-2xl p-8 bg-white rounded-lg shadow-xl">
+            <button
+              onClick={() => setEditingVisit(null)}
+              className="absolute top-0 right-0 p-2 m-4 text-gray-500 rounded-full hover:bg-gray-200"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 className="mb-4 text-xl font-semibold">Editar Visita</h3>
+            <EditVisitForm 
+              visit={editingVisit} 
+              professionalId={professionalId} 
+              onSuccess={handleEditSuccess}
+              onCancel={() => setEditingVisit(null)}
+            />
           </div>
         </div>
       )}
