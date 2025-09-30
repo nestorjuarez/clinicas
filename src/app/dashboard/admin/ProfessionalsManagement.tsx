@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import CreateProfessionalForm from './CreateProfessionalForm';
+import EditProfessionalForm from './EditProfessionalForm';
 
 type Professional = {
   id: number;
@@ -23,9 +24,16 @@ interface ProfessionalsManagementProps {
 
 export default function ProfessionalsManagement({ professionals, specialties }: ProfessionalsManagementProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProfessional, setEditingProfessional] = useState<Professional | null>(null);
 
   const handleSuccess = () => {
     setIsModalOpen(false);
+  };
+
+  const handleEditSuccess = () => {
+    setEditingProfessional(null);
+    // Recargar la página para mostrar los cambios
+    window.location.reload();
   };
 
   return (
@@ -51,6 +59,7 @@ export default function ProfessionalsManagement({ professionals, specialties }: 
                   <th scope="col" className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Email</th>
                   <th scope="col" className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Especialidades</th>
                   <th scope="col" className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Ciudad</th>
+                  <th scope="col" className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Acciones</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -62,6 +71,14 @@ export default function ProfessionalsManagement({ professionals, specialties }: 
                       {prof.specialties.map(s => s.name).join(', ')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{prof.city}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <button
+                        onClick={() => setEditingProfessional(prof)}
+                        className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+                      >
+                        Editar
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -70,6 +87,27 @@ export default function ProfessionalsManagement({ professionals, specialties }: 
         </div>
       </div>
 
+
+      {/* Modal para Editar Profesional */}
+      {editingProfessional && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-2xl p-8 bg-white rounded-lg shadow-xl">
+            <button
+              onClick={() => setEditingProfessional(null)}
+              className="absolute top-0 right-0 p-2 m-4 text-gray-500 rounded-full hover:bg-gray-200 focus:outline-none"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 className="mb-4 text-xl font-semibold">Editar Profesional</h3>
+            <EditProfessionalForm 
+              professional={editingProfessional} 
+              specialties={specialties} 
+              onSuccess={handleEditSuccess}
+              onCancel={() => setEditingProfessional(null)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Modal para el Formulario */}
       {isModalOpen && (

@@ -54,7 +54,10 @@ export default function CreateProfessionalForm({ specialties, onSuccess }: Creat
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          specialties: formData.specialtyIds,
+        }),
       });
 
       const data = await response.json();
