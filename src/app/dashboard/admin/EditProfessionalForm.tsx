@@ -12,7 +12,7 @@ interface EditProfessionalFormProps {
 
 export default function EditProfessionalForm({ professional, specialties, onSuccess, onCancel }: EditProfessionalFormProps) {
   const [formData, setFormData] = useState({
-    name: professional.name,
+    name: professional.name || '',
     email: professional.email,
     password: '',
     officeAddress: professional.officeAddress || '',
