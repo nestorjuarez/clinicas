@@ -8,6 +8,7 @@ type Professional = {
   id: number;
   name: string | null;
   email: string;
+  officeAddress: string | null;
   city: string | null;
   specialties: Specialty[];
 };
