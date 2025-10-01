@@ -1,20 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-
-type Specialty = {
-  id: number;
-  name: string;
-};
-
-type Professional = {
-  id: number;
-  name: string;
-  email: string;
-  officeAddress: string | null;
-  city: string | null;
-  specialties: Specialty[];
-};
+import { Professional, Specialty } from '@/types/professional';
 
 interface EditProfessionalFormProps {
   professional: Professional;

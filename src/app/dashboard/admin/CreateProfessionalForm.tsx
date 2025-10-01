@@ -3,10 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Specialty = {
-  id: number;
-  name: string;
-};
+import { Specialty } from '@/types/professional';
 
 interface CreateProfessionalFormProps {
   specialties: Specialty[];

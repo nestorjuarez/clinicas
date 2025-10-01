@@ -3,20 +3,7 @@
 import { useState } from 'react';
 import CreateProfessionalForm from './CreateProfessionalForm';
 import EditProfessionalForm from './EditProfessionalForm';
-
-type Professional = {
-  id: number;
-  name: string | null;
-  email: string;
-  officeAddress: string | null;
-  city: string | null;
-  specialties: Specialty[];
-};
-
-type Specialty = {
-  id: number;
-  name: string;
-};
+import { Professional, Specialty } from '@/types/professional';
 
 interface ProfessionalsManagementProps {
   professionals: Professional[];
