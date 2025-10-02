@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
-import LogoutButton from './LogoutButton';
+import Navbar from './components/Navbar';
 import ProfessionalsManagement from './admin/ProfessionalsManagement';
 import SpecialtiesManagement from './admin/SpecialtiesManagement';
 import PatientsManagement from './PatientsManagement';
@@ -82,18 +82,8 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <Navbar user={user} />
       <div className="max-w-4xl p-8 mx-auto">
-        <div className="flex items-center justify-between pb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900">
-              ¡Bienvenido, {user.name}!
-            </h1>
-            <p className="mt-2 text-lg text-gray-600">
-              Has iniciado sesión como {user.email} (Rol: {user.role}).
-            </p>
-          </div>
-          <LogoutButton />
-        </div>
 
         {user.role === 'PROFESIONAL' && (
           <PatientsManagement initialPatients={user.patients} professionalId={user.id} />
