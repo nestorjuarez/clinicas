@@ -52,8 +52,8 @@ export default function LoginPage() {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Overlay oscuro */}
-      <div className="absolute inset-0 bg-black/60"></div>
+      {/* Overlay con gradiente */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"></div>
       <div className="max-w-md w-full space-y-8 relative z-10">
         {/* Header */}
         <div className="text-center">
@@ -62,16 +62,16 @@ export default function LoginPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-800">
+          <h2 className="mt-6 text-3xl font-bold text-white">
             Bienvenido
           </h2>
-          <p className="mt-2 text-sm text-gray-700">
+          <p className="mt-2 text-sm text-gray-200">
             Inicia sesión en tu cuenta
           </p>
         </div>
 
         {/* Form */}
-        <div className="bg-white py-8 px-6 shadow-xl rounded-2xl border border-gray-100">
+        <div className="bg-white/95 backdrop-blur-sm py-8 px-6 shadow-2xl rounded-2xl border border-white/20">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
@@ -166,7 +166,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-gray-300">
             Sistema de Gestión Clínica
           </p>
         </div>
