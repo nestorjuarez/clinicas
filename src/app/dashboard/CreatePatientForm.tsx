@@ -77,7 +77,7 @@ export default function CreatePatientForm({ professionalId, onSuccess }: CreateP
         </div>
         <div>
           <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-          <input type="date" name="dateOfBirth" id="dateOfBirth" value={formData.dateOfBirth} onChange={handleInputChange} className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm" />
+          <input type="date" name="dateOfBirth" id="dateOfBirth" value={formData.dateOfBirth} onChange={handleInputChange} className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm" lang="es" />
         </div>
         <div>
           <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección</label>

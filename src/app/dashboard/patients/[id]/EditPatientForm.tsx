@@ -130,6 +130,7 @@ export default function EditPatientForm({ patient, onSuccess, onCancel }: EditPa
           </label>
           <input
             type="date"
+            lang="es"
             name="dateOfBirth"
             id="dateOfBirth"
             value={formData.dateOfBirth}

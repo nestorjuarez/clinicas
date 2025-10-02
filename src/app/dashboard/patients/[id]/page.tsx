@@ -4,7 +4,6 @@ import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import PatientDetailsClient from './PatientDetailsClient';
 import Link from 'next/link';
-import EditPatientForm from './EditPatientForm';
 
 interface UserPayload {
   userId: number;
@@ -32,29 +31,30 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
   // 2. Get Patient Data
   const resolvedParams = await params;
   const patientId = parseInt(resolvedParams.id, 10);
-  const patient = await prisma.patient.findFirst({
-    where: {
-      id: patientId,
-      professionalId: professionalId,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      dni: true,
-      phone: true,
-      dateOfBirth: true,
-      clinicalHistory: {
-        include: {
-          visits: {
-            orderBy: {
-              visitDate: 'desc',
+    const patient = await prisma.patient.findFirst({
+      where: {
+        id: patientId,
+        professionalId: professionalId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        dni: true,
+        phone: true,
+        dateOfBirth: true,
+        address: true,
+        clinicalHistory: {
+          include: {
+            visits: {
+              orderBy: {
+                visitDate: 'desc',
+              },
             },
           },
         },
       },
-    },
-  });
+    });
 
   if (!patient) {
     return (
