@@ -10,6 +10,13 @@ interface UserPayload {
   userId: number;
 }
 
+interface User {
+  id: number;
+  name: string | null;
+  email: string;
+  role: string;
+}
+
 export default async function PatientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // 1. Get Professional ID from cookies
   const cookieStore = await cookies();
@@ -19,7 +26,7 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
   }
 
   let professionalId: number;
-  let user: any;
+  let user: User;
   try {
     const decoded = jwt.verify(
       token,
