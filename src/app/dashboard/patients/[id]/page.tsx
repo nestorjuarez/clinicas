@@ -26,7 +26,7 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
   }
 
   let professionalId: number;
-  let user: User;
+  let user: User | null;
   try {
     const decoded = jwt.verify(
       token,
@@ -45,6 +45,10 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
       },
     });
   } catch {
+    redirect('/login');
+  }
+
+  if (!user) {
     redirect('/login');
   }
 
