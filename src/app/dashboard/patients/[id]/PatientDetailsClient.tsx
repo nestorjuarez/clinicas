@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import AddVisitForm from './AddVisitForm';
 import EditVisitForm from './EditVisitForm';
+import EditPatientForm from './EditPatientForm';
 
 // Definimos los tipos para que el código sea más seguro y claro
 type Visit = {
@@ -21,9 +22,12 @@ type ClinicalHistory = {
 
 type Patient = {
   id: number;
-  name: string | null;
+  name: string;
   email: string;
+  dni: string;
   phone: string | null;
+  dateOfBirth: Date | null;
+  address: string | null;
   clinicalHistory: ClinicalHistory | null;
 };
 
@@ -36,6 +40,7 @@ export default function PatientDetailsClient({ patient, professionalId }: Patien
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewingVisit, setViewingVisit] = useState<Visit | null>(null); // State for the details modal
   const [editingVisit, setEditingVisit] = useState<Visit | null>(null); // State for editing modal
+  const [editingPatient, setEditingPatient] = useState(false); // State for editing patient
   const clinicalHistoryId = patient.clinicalHistory?.id;
 
   const handleSuccess = () => {
@@ -48,8 +53,37 @@ export default function PatientDetailsClient({ patient, professionalId }: Patien
     window.location.reload();
   };
 
+  const handlePatientEditSuccess = () => {
+    setEditingPatient(false);
+    // Recargar la página para mostrar los cambios
+    window.location.reload();
+  };
+
   return (
     <>
+      {/* Patient Info Card */}
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-gray-800">{patient.name}</h1>
+          <button
+            onClick={() => setEditingPatient(true)}
+            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Editar Paciente
+          </button>
+        </div>
+        <div className="mt-2 space-y-1">
+          <p className="text-gray-600">{patient.email}</p>
+          <p className="text-gray-600">DNI: {patient.dni}</p>
+          {patient.phone && <p className="text-gray-600">Teléfono: {patient.phone}</p>}
+          {patient.dateOfBirth && (
+            <p className="text-gray-600">
+              Fecha de Nacimiento: {new Date(patient.dateOfBirth).toLocaleDateString('es-ES')}
+            </p>
+          )}
+        </div>
+      </div>
+
       <div className="mt-8">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-gray-800">Historial de Visitas</h2>
@@ -100,7 +134,7 @@ export default function PatientDetailsClient({ patient, professionalId }: Patien
             <h3 className="mb-4 text-xl font-semibold">Detalles de la Visita</h3>
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-gray-800">Epicrisis</h4>
+                <h4 className="font-semibold text-gray-800">Evolución</h4>
                 <p className="p-2 mt-1 bg-gray-100 border border-gray-200 rounded-md whitespace-pre-wrap">{viewingVisit.epicrisis}</p>
               </div>
               <div>
@@ -134,6 +168,26 @@ export default function PatientDetailsClient({ patient, professionalId }: Patien
               professionalId={professionalId} 
               onSuccess={handleEditSuccess}
               onCancel={() => setEditingVisit(null)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Edit Patient Modal */}
+      {editingPatient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-2xl p-8 bg-white rounded-lg shadow-xl">
+            <button
+              onClick={() => setEditingPatient(false)}
+              className="absolute top-0 right-0 p-2 m-4 text-gray-500 rounded-full hover:bg-gray-200 focus:outline-none"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 className="mb-4 text-xl font-semibold">Editar Paciente</h3>
+            <EditPatientForm 
+              patient={patient} 
+              onSuccess={handlePatientEditSuccess}
+              onCancel={() => setEditingPatient(false)}
             />
           </div>
         </div>

@@ -99,7 +99,7 @@ export default function EditVisitForm({ visit, professionalId, onSuccess, onCanc
 
       <div>
         <label htmlFor="epicrisis" className="block text-sm font-medium text-gray-700">
-          Epicrisis
+          Evolución
         </label>
         <textarea
           name="epicrisis"

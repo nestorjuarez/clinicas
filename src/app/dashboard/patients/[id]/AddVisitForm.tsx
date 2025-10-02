@@ -63,7 +63,7 @@ export default function AddVisitForm({ clinicalHistoryId, professionalId, onSucc
         <input type="text" name="reason" id="reason" required value={formData.reason} onChange={handleInputChange} className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm" />
       </div>
       <div>
-        <label htmlFor="epicrisis" className="block text-sm font-medium text-gray-700">Epicrisis</label>
+        <label htmlFor="epicrisis" className="block text-sm font-medium text-gray-700">Evolución</label>
         <textarea name="epicrisis" id="epicrisis" required value={formData.epicrisis} onChange={handleInputChange} rows={4} className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm"></textarea>
       </div>
       <div>

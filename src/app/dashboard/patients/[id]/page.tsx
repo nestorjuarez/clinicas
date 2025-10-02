@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import PatientDetailsClient from './PatientDetailsClient';
 import Link from 'next/link';
+import EditPatientForm from './EditPatientForm';
 
 interface UserPayload {
   userId: number;
@@ -72,20 +73,6 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
           </Link>
         </div>
 
-        <div className="p-6 bg-white rounded-lg shadow-md">
-          <h1 className="text-3xl font-bold text-gray-800">{patient.name}</h1>
-          <div className="mt-2 space-y-1">
-            <p className="text-gray-600">{patient.email}</p>
-            <p className="text-gray-600">DNI: {patient.dni}</p>
-            {patient.phone && <p className="text-gray-600">Teléfono: {patient.phone}</p>}
-            {patient.dateOfBirth && (
-              <p className="text-gray-600">
-                Fecha de Nacimiento: {new Date(patient.dateOfBirth).toLocaleDateString('es-ES')}
-              </p>
-            )}
-          </div>
-        </div>
-        
         <PatientDetailsClient patient={patient} professionalId={professionalId} />
       </div>
     </div>
